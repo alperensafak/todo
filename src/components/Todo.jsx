@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import clsx from "clsx"
-import {MdEdit, MdCancel } from "react-icons/md"
+import {MdEdit, MdCancel,MdCheck } from "react-icons/md"
 import {useTodoLayerValue} from "../context/TodoContext"
 
 
@@ -24,22 +24,52 @@ const [content, setContent] = useState(todo.content)
         })
     }
 
+    const updateTodo = ({ todoId, newValue }) => {
+        dispatch({
+          type: 'UPDATE_TODO',
+          payload: {
+            todoId,
+            newValue,
+          },
+        });
+      };
+
     const todoStyle = clsx({
         ["todo-row"]:true,
         ["completed"]: todo.isCompleted
     })
     return (
-       
-      
-        <div className={todoStyle} >
-            <div onClick={()=>{completeTodo(todo.id)}}>
-                {
-                    editable ? <input type:"text" value={} onChange={()=>{}}>:{todo.content}
-                }
-            </div>
+        <div className={todoStyle}>
+      <div onClick={() => (editable ? '' : completeTodo(todo.id))}>
+        {editable ? (
+          <input
+            type="text"
+            value={content}
+            className="todo-input-edit"
+            onChange={(event) => setContent(event.target.value)}
+          />
+        ) : (
+          todo.content
+        )}
+      </div>
+
+
             <div className="todo-icons">
-<MdEdit  className="todo-icon"  onClick={()=>setEditable(true)}/>
-<MdCancel  className="todo-icon" onClick={()=>removeTodo(todo.id)} />
+               
+                <MdCancel  className="todo-icon" onClick={()=>removeTodo(todo.id)} />
+
+                {editable ? (
+          <MdCheck
+            className="todo-icon"
+            onClick={() => {
+              updateTodo({ todoId: todo.id, newValue: content });
+              setEditable(false);
+              setContent('');
+            }}
+          />
+        ) : (
+          <MdEdit className="todo-icon" onClick={() => setEditable(true)} />
+        )}
 
             </div>
         </div>

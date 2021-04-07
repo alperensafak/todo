@@ -41,6 +41,19 @@ const reducer = (state, action) => {
           };
         }),
       };
+    case "UPDATE_TODO":
+      return {
+        ...state,
+        todos: state.todos.map(todo => {
+          if (todo.id !== action.payload.todoId) {
+            return todo;
+          }
+          return {
+            ...todo,
+            content: action.payload.newValue,
+          };
+        }),
+      };
 
     default:
       return {
